@@ -12,11 +12,14 @@ import java.sql.ResultSet;
     
     
 public class Connect {  
-     /** 
-     * Connect to a sample database 
-     */  
+     /*
+     *First MAking a Database File in the desired Folder
+     */ 
+
+     // FileName can be anything that we want to input
     public static void createNewDatabase(String fileName) {  
    
+        // Having a variable URL
         String url = "jdbc:sqlite:C:/sqlite/DB/" + fileName;  
    
         try {  
@@ -31,6 +34,10 @@ public class Connect {
             System.out.println(e.getMessage());  
         }  
     }
+
+
+    /* Creating a Connection Checker class to find if the database is present or not*/
+
     public static void connect() {  
         Connection conn = null;  
         try {  
@@ -59,6 +66,11 @@ public class Connect {
         String url = "jdbc:sqlite:C://sqlite/DB/movies1.db";  
           
         // SQL statement for creating a new table  
+
+        /*
+        *With primary key as id, and constraints for the year
+        */ 
+
         String sql = "CREATE TABLE moviedetail " +
         "(id INTEGER PRIMARY KEY AUTOINCREMENT, " +
         " mname VARCHAR(255) NOT NULL, " + 
@@ -75,6 +87,9 @@ public class Connect {
             System.out.println(e.getMessage());  
         }  
     }    
+
+    /* A private class to provide connection to SQL QUERIES only*/ 
+
     private Connection konnect() {  
         // SQLite connection string  
         String url = "jdbc:sqlite:C://sqlite/DB/movies1.db";  
@@ -87,6 +102,8 @@ public class Connect {
         return conn;  
     }  
     
+    /* INSERING the calues into the table that we created with 5 variables*/ 
+
     public void insert(String mname, String actor,String actress,String director,int year) {  
         String sql = "INSERT INTO moviedetail(mname, actor, actress, director,year) VALUES(?,?,?,?,?)";  
    
@@ -103,8 +120,12 @@ public class Connect {
             System.out.println(e.getMessage());  
         }  
     }  
+
+    /*TO display every row in the moviereview table*/
     
     public void selectAll(){  
+
+        /*SQL query for selecting everything*/ 
         String sql = "SELECT * FROM moviedetail";  
           
         try {  
@@ -126,7 +147,11 @@ public class Connect {
         }  
     }  
     
+    /*To display very specific movies with a particular actor*/
+
     public void selectActor(){  
+
+        // SQL query to select the name of the actor and find the movie he is related to
         String sql = "SELECT * FROM moviedetail WHERE actor ='Oscar Issac'";  
           
         try {  
@@ -147,19 +172,27 @@ public class Connect {
             System.out.println(e.getMessage());  
         }  
     }  
+
     public static void main(String[] args) {  
+
+        //Creating a database of the name movies1
+
         createNewDatabase("movies1.db");
         connect();  
         createNewTable();
         
         Connect app = new Connect();
         
+
+        // Inerting the values into the table using the insert class made above
         app.insert("Inception","Leonardo DiCaprio","Elliot Page","Christopher Nolen",2010);
         app.insert("Interstellar","MAtthew McConaughey","Anne Hathway","Christopher Nolen",2014);
         app.insert("The ShawShank Redemption","Andy Dufresne","Renee Blaine","Frank Darabont",1994);
         app.insert("Ex Machina","Oscar Issac","Alicia Vikander","ALex GArland",2014);
         app.insert("The Humger Games","Sam Claflin","Jennifer Lawrence","Garry Ross",2012);
         
+
+        //SQL queries for showing the rows in the cmd or the output
         app.selectAll(); 
         app.selectActor();
     }  
