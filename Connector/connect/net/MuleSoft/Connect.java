@@ -1,0 +1,166 @@
+package net.MuleSoft;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.DatabaseMetaData; 
+import java.sql.ResultSet;  
+
+   
+    
+    
+public class Connect {  
+     /** 
+     * Connect to a sample database 
+     */  
+    public static void createNewDatabase(String fileName) {  
+   
+        String url = "jdbc:sqlite:C:/sqlite/DB/" + fileName;  
+   
+        try {  
+            Connection conn = DriverManager.getConnection(url);  
+            if (conn != null) {  
+                DatabaseMetaData meta = conn.getMetaData();  
+                System.out.println("The driver name is " + meta.getDriverName());  
+                System.out.println("A new database has been created.");  
+            }  
+   
+        } catch (SQLException e) {  
+            System.out.println(e.getMessage());  
+        }  
+    }
+    public static void connect() {  
+        Connection conn = null;  
+        try {  
+            // db parameters  
+            String url = "jdbc:sqlite:C:/sqlite/DB/movies1.db";  
+            // create a connection to the database  
+            conn = DriverManager.getConnection(url);  
+              
+            System.out.println("Connection to SQLite has been established.");  
+              
+        } catch (SQLException e) {  
+            System.out.println(e.getMessage());  
+        } finally {  
+            try {  
+                if (conn != null) {  
+                    conn.close();  
+                }  
+            } catch (SQLException ex) {  
+                System.out.println(ex.getMessage());  
+            }  
+        }  
+    }
+    
+    public static void createNewTable() {  
+        // SQLite connection string  
+        String url = "jdbc:sqlite:C://sqlite/DB/movies1.db";  
+          
+        // SQL statement for creating a new table  
+        String sql = "CREATE TABLE moviedetail " +
+        "(id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        " mname VARCHAR(255) NOT NULL, " + 
+        " actor VARCHAR(255), " +
+        " actress VARCHAR(255), " +
+        " director VARCHAR(255) NOT NULL, " + 
+        " year INTEGER NOT NULL CHECK(year BETWEEN 1700 AND 2030))";
+          
+        try{  
+            Connection conn = DriverManager.getConnection(url);  
+            Statement stmt = conn.createStatement();  
+            stmt.execute(sql);  
+        } catch (SQLException e) {  
+            System.out.println(e.getMessage());  
+        }  
+    }    
+    private Connection konnect() {  
+        // SQLite connection string  
+        String url = "jdbc:sqlite:C://sqlite/DB/movies1.db";  
+        Connection conn = null;  
+        try {  
+            conn = DriverManager.getConnection(url);  
+        } catch (SQLException e) {  
+            System.out.println(e.getMessage());  
+        }  
+        return conn;  
+    }  
+    
+    public void insert(String mname, String actor,String actress,String director,int year) {  
+        String sql = "INSERT INTO moviedetail(mname, actor, actress, director,year) VALUES(?,?,?,?,?)";  
+   
+        try{  
+            Connection conn = this.konnect();  
+            PreparedStatement pstmt = conn.prepareStatement(sql);  
+            pstmt.setString(1, mname);
+            pstmt.setString(2, actor);
+            pstmt.setString(3, actress);
+            pstmt.setString(4, director);  
+            pstmt.setInt(5, year);  
+            pstmt.executeUpdate();  
+        } catch (SQLException e) {  
+            System.out.println(e.getMessage());  
+        }  
+    }  
+    
+    public void selectAll(){  
+        String sql = "SELECT * FROM moviedetail";  
+          
+        try {  
+            Connection conn = this.konnect();  
+            Statement stmt  = conn.createStatement();  
+            ResultSet rs    = stmt.executeQuery(sql);  
+              
+            // loop through the result set  
+            while (rs.next()) {  
+                System.out.println(rs.getInt("id") +  "\t" +   
+                                   rs.getString("mname") + "\t" + 
+                                   rs.getString("actor") + "\t" +
+                                   rs.getString("actress") + "\t" +
+                                   rs.getString("director") + "\t" + 
+                                   rs.getInt("year"));  
+            }  
+        } catch (SQLException e) {  
+            System.out.println(e.getMessage());  
+        }  
+    }  
+    
+    public void selectActor(){  
+        String sql = "SELECT * FROM moviedetail WHERE actor ='Oscar Issac'";  
+          
+        try {  
+            Connection conn = this.konnect();  
+            Statement stmt  = conn.createStatement();  
+            ResultSet rs    = stmt.executeQuery(sql);  
+              
+            // loop through the result set  
+            while (rs.next()) {  
+                System.out.println(rs.getInt("id") +  "\t" +   
+                                   rs.getString("mname") + "\t" + 
+                                   rs.getString("actor") + "\t" +
+                                   rs.getString("actress") + "\t" +
+                                   rs.getString("director") + "\t" + 
+                                   rs.getInt("year"));  
+            }  
+        } catch (SQLException e) {  
+            System.out.println(e.getMessage());  
+        }  
+    }  
+    public static void main(String[] args) {  
+        createNewDatabase("movies1.db");
+        connect();  
+        createNewTable();
+        
+        Connect app = new Connect();
+        
+        app.insert("Inception","Leonardo DiCaprio","Elliot Page","Christopher Nolen",2010);
+        app.insert("Interstellar","MAtthew McConaughey","Anne Hathway","Christopher Nolen",2014);
+        app.insert("The ShawShank Redemption","Andy Dufresne","Renee Blaine","Frank Darabont",1994);
+        app.insert("Ex Machina","Oscar Issac","Alicia Vikander","ALex GArland",2014);
+        app.insert("The Humger Games","Sam Claflin","Jennifer Lawrence","Garry Ross",2012);
+        
+        app.selectAll(); 
+        app.selectActor();
+    }  
+}  
