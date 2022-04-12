@@ -31,8 +31,11 @@ This is a basic Representation of a SQLite Database for movies that you like tha
 # WORKING :------------
 
 -> The working method was using command line to setup and test each and every stuff in the process.
+
 -> sqlite3 was used to check the database in realtime, that whether the changes made is correct or not.
+
 -> Jar file used for compilation was sqlite as well.
+
 -> The main code for everything is present in Connect.java inside the MuleSoft folder as you go inside the Connector Folder.
 
 # HOW TO MAKE IT WORK:::::::::::::::::::::::::::::::::::::
